@@ -52,58 +52,57 @@ public class Order {
 	 * Run asking process for a menu.
 	 */
 	public String runMenu() {
-		int nbMenu = askMenu();
-		int nbSide = -1;
-		int nbDrink = -1;
-		switch (nbMenu) {
-		case 1:
-			nbSide = askSide(true);
-			nbDrink = askDrink();
-			break;
-		case 2:
-			nbSide = askSide(true);
-			break;
-		case 3:
-			nbSide = askSide(false);
-			nbDrink = askDrink();
-			break;
-		}
-		return nbMenu + "," + nbSide + "," + nbDrink + "%n";
-	}
+        int nbMenu = askMenu();
+        int nbSide = -1;
+        int nbDrink = -1;
+        switch (nbMenu) {
+            case 1:
+                nbSide = askSide(true);
+                nbDrink = askDrink();
+                break;
+            case 2:
+                nbSide = askSide(true);
+                break;
+            case 3:
+                nbSide = askSide(false);
+                nbDrink = askDrink();
+                break;
+        }
+        return nbMenu + "," + nbSide + "," + nbDrink + "%n";
+    }
 
 	/**
 	 * Run asking process for several menus
 	 */
-	public void runMenus() {
-		Path orderPath = Paths.get("order.csv");
-		System.out.println("Combien souhaitez vous commander de menu ?");
-		int menuQuantity = -1;
-		boolean responseIsGood;
-		do {
-			try {
-				menuQuantity = sc.nextInt();
-				responseIsGood = true;
-			} catch (InputMismatchException e) {
-				sc.next();
-				System.out.println("Vous devez saisir un nombre, correspondant au nombre de menus souhaités");
-				responseIsGood = false;
-			}
-		} while (!responseIsGood);
-		orderSummary = "Résumé de votre commande :%n";
-		for (int i = 0; i < menuQuantity; i++) {
-			orderSummary += "Menu " + (i + 1) + ":%n";
-			String orderLine = this.runMenu();
-			try {
-				Files.write(orderPath, String.format(orderLine).getBytes(), APPEND);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				System.out.println("Ooops une erreur est survenue. Merci de réessayer plus tard.");
-				return;
-			}
-		}
-		System.out.println("");
-		System.out.println(String.format(orderSummary));
-	}
+	 public void runMenus() {
+	        Path orderPath = Paths.get("order.csv");
+	        System.out.println("Combien souhaitez vous commander de menu ?");
+	        int menuQuantity = -1;
+	        boolean responseIsGood;
+	        do {
+	            try {
+	                menuQuantity = sc.nextInt();
+	                responseIsGood = true;
+	            } catch (InputMismatchException e) {
+	                sc.next();
+	                System.out.println("Vous devez saisir un nombre, correspondant au nombre de menus souhaités");
+	                responseIsGood = false;
+	            }
+	        } while (!responseIsGood);
+	        orderSummary = "Résumé de votre commande :%n";
+	        for (int i = 0; i < menuQuantity; i++) {
+	            orderSummary += "Menu " + (i + 1) + ":%n";
+	            String orderLine = runMenu();
+	            try {
+	                Files.write(orderPath, String.format(orderLine).getBytes(), APPEND);
+	            } catch (IOException e) {
+	                System.out.println("Ooops une erreur est survenue. Merci de réessayer plus tard");
+	                return;
+	            }
+	        }
+	        System.out.println("");
+	        System.out.println(String.format(orderSummary));
+	    }
 
 	/**
 	 * Display a selected side depending on all sides enable or not. All sides =
@@ -257,22 +256,22 @@ public class Order {
 	 * Display a question about side in the standard input, get response and display
 	 * it
 	 */
-	public int askSide(boolean allSidesEnable) {
-		if (allSidesEnable) {
-			String[] responsesAllSide = { "légumes frais", "frites", "riz" };
-			return askSomething("accompagnement", responsesAllSide);
-		} else {
-			String[] responsesOnlyRice = { "riz", "pas de riz" };
-			return askSomething("accompagnement", responsesOnlyRice);
-		}
-	}
-
-	/**
-	 * Display a question about drink in the standard input, get response and
-	 * display it
-	 */
-	public int askDrink() {
-		String[] responsesDrink = { "eau plate", "eau gazeuse", "soda" };
-		return askSomething("boisson", responsesDrink);
-	}
+    public int askSide(boolean allSidesEnable) {
+        if (allSidesEnable) {
+            String[] responsesAllSide = {"légumes frais", "frites", "riz"};
+            return askSomething("accompagnement", responsesAllSide);
+        } else {
+            String[] responsesOnlyRice = {"riz", "pas de riz"};
+            return askSomething("accompagnement", responsesOnlyRice);
+        }
+    }
+    
+    /**
+     * Display a question about drink in the standard input, get response and display it
+     * @return chosen value
+     */
+    public int askDrink() {
+        String[] responsesDrink = {"eau plate", "eau gazeuse", "soda"};
+        return askSomething("boisson", responsesDrink);
+    }
 }
